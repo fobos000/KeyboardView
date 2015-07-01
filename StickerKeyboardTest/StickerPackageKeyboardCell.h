@@ -11,6 +11,7 @@
 @interface StickerPackageKeyboardCell : UICollectionViewCell
 
 @property (nonatomic, weak) IBOutlet UIImageView *stickerPackageImageView;
-@property (nonatomic, weak) IBOutlet UIView *activePackageIndicationView;
+
+@property (nonatomic) BOOL active;
 
 @end

@@ -9,26 +9,28 @@
 #import "StickerKeyboardView.h"
 #import "StickerPackageKeyboardCell.h"
 #import "StickerKeyboardCell.h"
+#import "StickerRecentTabCell.h"
 #import "UIViewAdditions.h"
 
-#define STICKER_GO_TO_MARKET_BUTTON_PADDING 120
-#define STICKER_PLUS_BUTTON_PADDING 50
-
+#define NUM_OF_PACKAGES_TO_SHOW_LARGE_MARKET_BUTTON 4
+#define MARKET_BUTTON_CORNER_RADIUS 5
 
 @interface StickerKeyboardView () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
 {
     StickerKeyboardCell *cellForSize;
 }
 
-@property (retain, nonatomic) IBOutlet UICollectionView *stickerPackageCollectionView;
-@property (retain, nonatomic) IBOutlet UICollectionView *stickerCollectionView;
-@property (retain, nonatomic) IBOutlet UIButton *plusButton;
-@property (retain, nonatomic) IBOutlet UIButton *goToMarketButton;
+@property (strong, nonatomic) IBOutlet UICollectionView *stickerPackageCollectionView;
+@property (strong, nonatomic) IBOutlet UICollectionView *stickerCollectionView;
+@property (strong, nonatomic) IBOutlet UIView *plusButton;
+@property (strong, nonatomic) IBOutlet UIView *goToMarketButton;
+@property (strong, nonatomic) IBOutlet UIView *packageCollectionViewContainer;
 @property (strong, nonatomic) NSMutableArray *array;
 @property (strong, nonatomic) StickerKeyboardCell *myCell;
-@property (strong, nonatomic) NSIndexPath  *selectedStickerIndexPath;
+@property (strong, nonatomic) UIView *marketButton;
+@property (strong, nonatomic) StickerPackageKeyboardCell *recentCell;
 
-@property (nonatomic) NSInteger selectedTabIndex;
+@property (assign, nonatomic) NSInteger selectedTabIndex;
 
 @end
 
@@ -36,220 +38,259 @@
 
 #pragma mark - Initialization
 - (instancetype)initWithFrame:(CGRect)frame {
-    
     self = [super initWithFrame:frame];
     if (self) {
-        NSArray *bundleArray = [[NSBundle mainBundle] loadNibNamed:@"StickerKeyboardView" owner:self options:nil];
-        [self addSubview:bundleArray[0]];
-
-        self.stickerPackageCollectionView.delegate = self;
-        self.stickerPackageCollectionView.dataSource = self;
-        
-        self.stickerCollectionView.delegate = self;
-        self.stickerCollectionView.dataSource = self;
-        
-        [self.stickerPackageCollectionView registerNib:[UINib nibWithNibName:@"StickerPackageKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerPackageCell"];
-        
-        [self.stickerCollectionView registerNib:[UINib nibWithNibName:@"StickerKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerCell"];
-        
-        self.stickerPackageCollectionView.width -= STICKER_GO_TO_MARKET_BUTTON_PADDING;
-        [self addSubview:self.goToMarketButton];
-        self.goToMarketButton.left = self.stickerPackageCollectionView.right;
-        
-        self.selectedStickerIndexPath = [NSIndexPath indexPathForRow:1 inSection:0];
+        [self commonInit];
+//        [self _registerEvents];
     }
     return self;
 }
 
-#pragma mark - StickerKeyboardViewDataSource
-#pragma mark - StickerKeyboardViewDelegate
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    self = [super initWithCoder:aDecoder];
+    if (self) {
+        [self commonInit];
+    }
+    return self;
+}
+
+- (void)commonInit
+{
+    NSArray *bundleArray = [[NSBundle mainBundle] loadNibNamed:@"StickerKeyboardView" owner:self options:nil];
+    UIView *keyboardView = bundleArray[0];
+    keyboardView.frame = self.bounds;
+    [self addSubview:keyboardView];
+    
+    self.stickerPackageCollectionView.delegate = self;
+    self.stickerPackageCollectionView.dataSource = self;
+    
+    self.stickerCollectionView.delegate = self;
+    self.stickerCollectionView.dataSource = self;
+    
+    [self.stickerPackageCollectionView registerNib:[UINib nibWithNibName:@"StickerPackageKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerPackageCell"];
+    
+    [self.stickerPackageCollectionView registerNib:[UINib nibWithNibName:@"StickerRecentTabCell" bundle:nil] forCellWithReuseIdentifier:@"recentCell"];
+    
+    [self.stickerCollectionView registerNib:[UINib nibWithNibName:@"StickerKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerCell"];
+    
+    self.marketButton = self.goToMarketButton;
+    [self configureMarketButtons];
+    
+    _selectedTabIndex = 0;
+}
+
+//-(void) dealloc
+//{
+//    [self _unregisterEvents];
+//}
+
+- (void)configureMarketButtons
+{
+    [self.marketButton.layer setCornerRadius:MARKET_BUTTON_CORNER_RADIUS];
+    [self.plusButton.layer setCornerRadius:MARKET_BUTTON_CORNER_RADIUS];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    [self layoutMarketButton];
+}
+
+- (void)setMarketButton:(UIView *)marketButton
+{
+    [_marketButton removeFromSuperview];
+    _marketButton = marketButton;
+    [self addSubview:_marketButton];
+    [self setNeedsLayout];
+}
+
+- (void)layoutMarketButton
+{
+    self.stickerPackageCollectionView.width = self.packageCollectionViewContainer.width - self.marketButton.width;
+    self.marketButton.centerY = CGRectGetMidY(self.packageCollectionViewContainer.bounds);
+    self.marketButton.right = self.packageCollectionViewContainer.right;
+}
+
+//#pragma mark - Events
+//-(void) _registerEvents
+//{
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_refreshLayout) name:STICKER_PACKAGES_DOWNLOADED object:nil];
+//}
+//-(void) _unregisterEvents
+//{
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:STICKER_PACKAGES_DOWNLOADED object:nil];
+//}
+
+-(void) _refreshLayout
+{
+    [_stickerPackageCollectionView reloadData];
+    [_stickerCollectionView reloadData];
+}
 
 #pragma mark - UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     if (collectionView == self.stickerPackageCollectionView) {
-        return [self.dataSouce numberOfStickersInStickerKeyboadView:self forStickerPackageAtIndex:section];
+        NSUInteger numberOfTabs = [self.dataSouce numberOfStickerPackagesInStickerKeyboadView:self] + 1;
+        if (numberOfTabs > NUM_OF_PACKAGES_TO_SHOW_LARGE_MARKET_BUTTON) {
+            self.marketButton = self.plusButton;
+        }
+        return numberOfTabs;
     } else if (collectionView == self.stickerCollectionView) {
-        return [self.dataSouce numberOfStickersInStickerKeyboadView:self forStickerPackageAtIndex:section];
+        if (_selectedTabIndex == 0) { // recent tab
+            return [self.dataSouce numberOfRecentStickersInStickerKeyboadView:self];
+        } else {
+            return [self.dataSouce numberOfStickersInStickerKeyboadView:self forStickerPackageAtIndex:_selectedTabIndex - 1];
+        }
+        
     }
     return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
     UICollectionViewCell *cell;
     if (collectionView == self.stickerPackageCollectionView) {
-        UIImage *stickerPackageImage = [self.dataSouce stickerKeyboardView:self imageForStickerPackageAtIndex:indexPath.item];
-        cell = [self packageCellForIndexPath:indexPath];
+        cell = [self cellForTabCollectionViewAtIndexPath:indexPath];
     } else if (collectionView == self.stickerCollectionView) {
-        NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:self.selectedTabIndex];
-        UIImage *stickerImage = [self.dataSouce stickerKeyboardView:self imageForStickerAtIndexPath:stickerIndexPath];
         cell = [self stickerCellForIndexPath:indexPath];
     }
     return cell;
 }
 
 #pragma mark - Cell Configuration
-- (StickerPackageKeyboardCell *)packageCellForIndexPath:(NSIndexPath *)indexPath {
-    
-    StickerPackageKeyboardCell *packageCell = [self.stickerPackageCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerPackageCell" forIndexPath:indexPath];
-    
-    if (indexPath.row == 0) {
-        packageCell.stickerPackageImageView.backgroundColor = [UIColor greenColor];
-    } else {
-        packageCell.stickerPackageImageView.backgroundColor = [UIColor redColor];
-    }
-    
-    if (indexPath.row == self.selectedStickerIndexPath.row) {
-        packageCell.activePackageIndicationView.backgroundColor = [UIColor orangeColor];
-    } else {
-        packageCell.activePackageIndicationView.backgroundColor = [UIColor clearColor];
-    }
-    
-    return packageCell;
-}
 
-- (StickerKeyboardCell *)stickerCellForIndexPath:(NSIndexPath *)indexPath {
-
-    StickerKeyboardCell *cell = [self.stickerCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerCell" forIndexPath:indexPath];
-    [self configureCell:cell forIndexPath:indexPath];
+- (UICollectionViewCell *)cellForTabCollectionViewAtIndexPath:(NSIndexPath *)indexPath
+{
+    __weak StickerPackageKeyboardCell *cell = nil;
+    
+    if (indexPath.item == 0) {
+        cell = [self recentCell];
+    } else {
+        
+        cell = [self.stickerPackageCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerPackageCell" forIndexPath:indexPath];
+        
+        [self.dataSouce stickerKeyboardView:self imageForStickerPackageAtIndex:indexPath.item - 1 responseCallback:^(UIImage *image) {
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                
+                cell.stickerPackageImageView.image = image;
+            });
+//            UIImage *stickerPackageImage = image;
+        }];
+    }
+    cell.active = (indexPath.item == _selectedTabIndex);
+    
     return cell;
 }
 
-- (void)configureCell:(StickerKeyboardCell *)cell forIndexPath:(NSIndexPath *)indexPath {
-    
-    if (indexPath.row  == 0) {
-        cell.label.text = @"Long";
+- (UICollectionViewCell *)recentCell
+{
+    if (!_recentCell) {
+        _recentCell = [self.stickerPackageCollectionView dequeueReusableCellWithReuseIdentifier:@"recentCell" forIndexPath:nil];
     }
-    if (indexPath.row  == 1) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 2) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 3) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 4) {
-        cell.label.text = @"LongLong";
-    }
-    if (indexPath.row  == 5) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 6) {
-        cell.label.text = @"LongLong";
-    }
-    if (indexPath.row  == 7) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 8) {
-        cell.label.text = @"Long";
-    }
-    if (indexPath.row  == 9) {
-        cell.label.text = @"LongLong";
-    }
+    return _recentCell;
+}
 
+//- (StickerPackageKeyboardCell *)packageCellWithImage:(UIImage *)image indexPath:(NSIndexPath *)indexPath{
+//    
+//    StickerPackageKeyboardCell *packageCell = [self.stickerPackageCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerPackageCell" forIndexPath:indexPath];
+//    
+//    packageCell.stickerPackageImageView.image = image;
+//    
+//    return packageCell;
+//}
+
+- (StickerKeyboardCell *)stickerCellForIndexPath:(NSIndexPath *)indexPath
+{
+    StickerKeyboardCell *cell = [self.stickerCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerCell" forIndexPath:indexPath];
+    
+    __block UIImage *stickerImage = nil;
+    
+    void (^loadImageBloack)(UIImage * image) = ^(UIImage * image) {
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            
+            stickerImage = image;
+            cell.imageView.image = stickerImage;
+        });
+    };
+    
+    if (_selectedTabIndex == 0) { //recent tab
+        [self.dataSouce stickerKeyboardView:self imageForRecentStickerAtIndex:indexPath.item responseCallback:loadImageBloack];
+    } else {
+        NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:_selectedTabIndex - 1];
+        [self.dataSouce stickerKeyboardView:self imageForStickerAtIndexPath:stickerIndexPath responseCallback:loadImageBloack];
+    }
+    return cell;
 }
 
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
     if (collectionView == self.stickerCollectionView) {
+        if (_selectedTabIndex == 0) {
+            return [self.dataSouce stickerKeyboardView:self sizeForRecentStickerImageAtIndex:indexPath.item];
+        } else {
+            NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:_selectedTabIndex - 1];
+            return [self.dataSouce stickerKeyboardView:self sizeForStickerImageAtIndexPath:stickerIndexPath];
+        }
+    } else {
+        CGFloat tabHeight = collectionView.bounds.size.height;
+        return CGSizeMake(tabHeight, tabHeight);
+    }
+}
+
+- (void)setSelectedTabIndex:(NSInteger)selectedTabIndex
+{
+    NSIndexPath *previousSelectedIndexPath = [NSIndexPath indexPathForItem:self.selectedTabIndex inSection:0];
+    StickerPackageKeyboardCell *previousSelectedCell = (StickerPackageKeyboardCell *)[self.stickerPackageCollectionView cellForItemAtIndexPath:previousSelectedIndexPath];
+    previousSelectedCell.active = NO;
     
-        [self configureCell:cellForSize forIndexPath:indexPath];
-        CGSize sizeOfCell = [cellForSize systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-        sizeOfCell.height += 20.5;
-        return sizeOfCell;
-    } else {
-        return CGSizeMake(50, 50);
-    }
-}
-
-- (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
+    NSIndexPath *currentSelectedIndexPath = [NSIndexPath indexPathForItem:selectedTabIndex inSection:0];
+    StickerPackageKeyboardCell *currentSelectedCell = (StickerPackageKeyboardCell *)[self.stickerPackageCollectionView cellForItemAtIndexPath:currentSelectedIndexPath];
+    currentSelectedCell.active = YES;
     
-    if (collectionView == self.stickerPackageCollectionView) {
-        return UIEdgeInsetsMake(0, 0, 0, 0);
-    } else {
-        return UIEdgeInsetsMake(10, 10, 10, 10);
-    }
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumInteritemSpacingForSectionAtIndex:(NSInteger)section {
-    if (collectionView == self.stickerPackageCollectionView) {
-        return 0.0f;
-    } else {
-        return 5.0f;
-    }
-}
-
-- (CGFloat)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout minimumLineSpacingForSectionAtIndex:(NSInteger)section {
+    _selectedTabIndex = selectedTabIndex;
     
-    if (collectionView == self.stickerPackageCollectionView) {
-        return 0.0f;
-    } else {
-        return 10.0f;
-    }
+    [self.stickerCollectionView reloadData];
 }
-
 
 #pragma mark - UICollectionViewDelegate
+
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     if (collectionView == self.stickerPackageCollectionView) {
-        
-        if (indexPath.row != self.selectedStickerIndexPath.row) {
+        if (indexPath.item != self.selectedTabIndex) {
+            self.selectedTabIndex = indexPath.item;
             
-            StickerPackageKeyboardCell *previousSelectedCell = (StickerPackageKeyboardCell *)[collectionView cellForItemAtIndexPath:self.selectedStickerIndexPath];
-            previousSelectedCell.activePackageIndicationView.backgroundColor = [UIColor clearColor];
-            
-            StickerPackageKeyboardCell *currentSelectedCell = (StickerPackageKeyboardCell *)[collectionView cellForItemAtIndexPath:indexPath];
-            currentSelectedCell.activePackageIndicationView.backgroundColor = [UIColor orangeColor];
-            
-            self.selectedStickerIndexPath = indexPath;
+            if ([self.delegate respondsToSelector:@selector(stickerKeyboardView:didSelectStickerPackageAtIndex:)]) {
+                [self.delegate stickerKeyboardView:self didSelectStickerPackageAtIndex:indexPath.item];
+            }
+        }
+    } else {
+        if (_selectedTabIndex == 0) { // recent tab
+            if ([self.delegate respondsToSelector:@selector(stickerKeyboardView:didSelectRecentStickerAtIndex:)]) {
+                [self.delegate stickerKeyboardView:self didSelectRecentStickerAtIndex:indexPath.item];
+            }
+        } else {
+            if ([self.delegate respondsToSelector:@selector(stickerKeyboardView:didSelectStickerAtIndexPath:)]) {
+                NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:_selectedTabIndex - 1];
+                [self.delegate stickerKeyboardView:self didSelectStickerAtIndexPath:stickerIndexPath];
+            }
         }
     }
 }
 
+#pragma mark - View
+
+- (void)refresh
+{
+    [self _refreshLayout];
+}
+
 #pragma mark - Actions
-- (void)changePlusButtons {
-    
-    [self.goToMarketButton removeFromSuperview];
-    self.stickerPackageCollectionView.width += STICKER_GO_TO_MARKET_BUTTON_PADDING - STICKER_PLUS_BUTTON_PADDING;
-    [self addSubview:self.plusButton];
-    self.plusButton.left = self.stickerPackageCollectionView.right;
-}
-- (void)revertChangeButtons {
-    
-    [self.plusButton removeFromSuperview];
-    [self addSubview:self.goToMarketButton];
-    self.stickerPackageCollectionView.width -= STICKER_GO_TO_MARKET_BUTTON_PADDING - STICKER_PLUS_BUTTON_PADDING;
-    self.plusButton.left = self.stickerPackageCollectionView.right;
-}
 
-- (IBAction)plusButtonClicked:(id)sender {
-    
-//    if ([self.array count] < 10 && !arrayFilled) {
-//        
-//        [self.array addObject:@1];
-//        [self.stickerPackageCollectionView reloadData];
-//    } else {
-//        
-//        arrayFilled = YES;
-//        [self.array removeLastObject];
-//        [self.stickerPackageCollectionView reloadData];
-//        
-//        if (self.array != nil && [self.array count] < 3) {
-//            arrayFilled = NO;
-//            [self revertChangeButtons];
-//        }
-//    }
-}
-
-- (IBAction)goToMarketButtonClicked:(id)sender {
-    
-    [self.array addObject:@2];
-    [self.stickerPackageCollectionView reloadData];
-    
-    if ([self.array count] > 3) {
-        [self changePlusButtons];
+- (IBAction)marketButtonTapped:(UIButton *)marketButton
+{
+    if ([self.delegate respondsToSelector:@selector(stickerKeyboardViewDidTapOnMarketButton:)]) {
+        [self.delegate stickerKeyboardViewDidTapOnMarketButton:self];
     }
 }
 

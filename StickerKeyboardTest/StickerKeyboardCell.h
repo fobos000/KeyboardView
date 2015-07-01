@@ -10,6 +10,6 @@
 
 @interface StickerKeyboardCell : UICollectionViewCell
 
-@property (retain, nonatomic) IBOutlet UILabel *label;
+@property (weak, nonatomic) IBOutlet UIImageView *imageView;
 
 @end

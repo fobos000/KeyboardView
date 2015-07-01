@@ -7,6 +7,22 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3F1CD6211B42E1E300AD1B65 /* StickerKeyboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD60E1B42E1E300AD1B65 /* StickerKeyboardCell.m */; };
+		3F1CD6221B42E1E300AD1B65 /* StickerKeyboardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD60F1B42E1E300AD1B65 /* StickerKeyboardCell.xib */; };
+		3F1CD6231B42E1E300AD1B65 /* StickerKeyboardDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6111B42E1E300AD1B65 /* StickerKeyboardDataSource.m */; };
+		3F1CD6241B42E1E300AD1B65 /* StickerKeyboardView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6131B42E1E300AD1B65 /* StickerKeyboardView.mm */; };
+		3F1CD6251B42E1E300AD1B65 /* StickerKeyboardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD6141B42E1E300AD1B65 /* StickerKeyboardView.xib */; };
+		3F1CD6261B42E1E300AD1B65 /* StickerPackageKeyboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6161B42E1E300AD1B65 /* StickerPackageKeyboardCell.m */; };
+		3F1CD6271B42E1E300AD1B65 /* StickerPackageKeyboardCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD6171B42E1E300AD1B65 /* StickerPackageKeyboardCell.xib */; };
+		3F1CD6281B42E1E300AD1B65 /* UIViewAdditions.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6191B42E1E300AD1B65 /* UIViewAdditions.mm */; };
+		3F1CD6291B42E1E300AD1B65 /* StickerKeyboardModel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD61A1B42E1E300AD1B65 /* StickerKeyboardModel.mm */; };
+		3F1CD62A1B42E1E300AD1B65 /* StickerRecentTabCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD61C1B42E1E300AD1B65 /* StickerRecentTabCell.m */; };
+		3F1CD62D1B440B2B00AD1B65 /* StickerRecentTabCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD62C1B440B2B00AD1B65 /* StickerRecentTabCell.xib */; };
+		3F1CD6311B442C6800AD1B65 /* packageImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD62E1B442C6800AD1B65 /* packageImage.png */; };
+		3F1CD6321B442C6800AD1B65 /* stickerImaegHalf.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD62F1B442C6800AD1B65 /* stickerImaegHalf.png */; };
+		3F1CD6331B442C6800AD1B65 /* stickerImaegRegular.png in Resources */ = {isa = PBXBuildFile; fileRef = 3F1CD6301B442C6800AD1B65 /* stickerImaegRegular.png */; };
+		3F1CD6361B442D7400AD1B65 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6351B442D7400AD1B65 /* SwipeView.m */; };
+		3F1CD63A1B4434FA00AD1B65 /* StickerSwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F1CD6391B4434FA00AD1B65 /* StickerSwipeView.m */; };
 		5063D6C11B3617F2005935D9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063D6C01B3617F2005935D9 /* main.m */; };
 		5063D6C41B3617F2005935D9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063D6C31B3617F2005935D9 /* AppDelegate.m */; };
 		5063D6C71B3617F2005935D9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5063D6C61B3617F2005935D9 /* ViewController.m */; };
@@ -27,6 +43,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3F1CD60D1B42E1E300AD1B65 /* StickerKeyboardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerKeyboardCell.h; sourceTree = "<group>"; };
+		3F1CD60E1B42E1E300AD1B65 /* StickerKeyboardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerKeyboardCell.m; sourceTree = "<group>"; };
+		3F1CD60F1B42E1E300AD1B65 /* StickerKeyboardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StickerKeyboardCell.xib; sourceTree = "<group>"; };
+		3F1CD6101B42E1E300AD1B65 /* StickerKeyboardDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerKeyboardDataSource.h; sourceTree = "<group>"; };
+		3F1CD6111B42E1E300AD1B65 /* StickerKeyboardDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerKeyboardDataSource.m; sourceTree = "<group>"; };
+		3F1CD6121B42E1E300AD1B65 /* StickerKeyboardView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerKeyboardView.h; sourceTree = "<group>"; };
+		3F1CD6131B42E1E300AD1B65 /* StickerKeyboardView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StickerKeyboardView.mm; sourceTree = "<group>"; };
+		3F1CD6141B42E1E300AD1B65 /* StickerKeyboardView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StickerKeyboardView.xib; sourceTree = "<group>"; };
+		3F1CD6151B42E1E300AD1B65 /* StickerPackageKeyboardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerPackageKeyboardCell.h; sourceTree = "<group>"; };
+		3F1CD6161B42E1E300AD1B65 /* StickerPackageKeyboardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerPackageKeyboardCell.m; sourceTree = "<group>"; };
+		3F1CD6171B42E1E300AD1B65 /* StickerPackageKeyboardCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StickerPackageKeyboardCell.xib; sourceTree = "<group>"; };
+		3F1CD6181B42E1E300AD1B65 /* UIViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIViewAdditions.h; sourceTree = "<group>"; };
+		3F1CD6191B42E1E300AD1B65 /* UIViewAdditions.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = UIViewAdditions.mm; sourceTree = "<group>"; };
+		3F1CD61A1B42E1E300AD1B65 /* StickerKeyboardModel.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = StickerKeyboardModel.mm; sourceTree = "<group>"; };
+		3F1CD61B1B42E1E300AD1B65 /* StickerRecentTabCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerRecentTabCell.h; sourceTree = "<group>"; };
+		3F1CD61C1B42E1E300AD1B65 /* StickerRecentTabCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerRecentTabCell.m; sourceTree = "<group>"; };
+		3F1CD61D1B42E1E300AD1B65 /* StickerKeyboardModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerKeyboardModel.h; sourceTree = "<group>"; };
+		3F1CD62C1B440B2B00AD1B65 /* StickerRecentTabCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StickerRecentTabCell.xib; sourceTree = "<group>"; };
+		3F1CD62E1B442C6800AD1B65 /* packageImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = packageImage.png; sourceTree = "<group>"; };
+		3F1CD62F1B442C6800AD1B65 /* stickerImaegHalf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stickerImaegHalf.png; sourceTree = "<group>"; };
+		3F1CD6301B442C6800AD1B65 /* stickerImaegRegular.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stickerImaegRegular.png; sourceTree = "<group>"; };
+		3F1CD6341B442D7400AD1B65 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
+		3F1CD6351B442D7400AD1B65 /* SwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SwipeView.m; sourceTree = "<group>"; };
+		3F1CD6381B4434FA00AD1B65 /* StickerSwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StickerSwipeView.h; sourceTree = "<group>"; };
+		3F1CD6391B4434FA00AD1B65 /* StickerSwipeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StickerSwipeView.m; sourceTree = "<group>"; };
 		5063D6BB1B3617F2005935D9 /* StickerKeyboardTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StickerKeyboardTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5063D6BF1B3617F2005935D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5063D6C01B3617F2005935D9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -60,6 +101,45 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3F1CD62B1B42E1FA00AD1B65 /* Stickers */ = {
+			isa = PBXGroup;
+			children = (
+				3F1CD62E1B442C6800AD1B65 /* packageImage.png */,
+				3F1CD62F1B442C6800AD1B65 /* stickerImaegHalf.png */,
+				3F1CD6301B442C6800AD1B65 /* stickerImaegRegular.png */,
+				3F1CD62C1B440B2B00AD1B65 /* StickerRecentTabCell.xib */,
+				3F1CD60D1B42E1E300AD1B65 /* StickerKeyboardCell.h */,
+				3F1CD60E1B42E1E300AD1B65 /* StickerKeyboardCell.m */,
+				3F1CD60F1B42E1E300AD1B65 /* StickerKeyboardCell.xib */,
+				3F1CD6101B42E1E300AD1B65 /* StickerKeyboardDataSource.h */,
+				3F1CD6111B42E1E300AD1B65 /* StickerKeyboardDataSource.m */,
+				3F1CD6121B42E1E300AD1B65 /* StickerKeyboardView.h */,
+				3F1CD6131B42E1E300AD1B65 /* StickerKeyboardView.mm */,
+				3F1CD6141B42E1E300AD1B65 /* StickerKeyboardView.xib */,
+				3F1CD6151B42E1E300AD1B65 /* StickerPackageKeyboardCell.h */,
+				3F1CD6161B42E1E300AD1B65 /* StickerPackageKeyboardCell.m */,
+				3F1CD6171B42E1E300AD1B65 /* StickerPackageKeyboardCell.xib */,
+				3F1CD6181B42E1E300AD1B65 /* UIViewAdditions.h */,
+				3F1CD6191B42E1E300AD1B65 /* UIViewAdditions.mm */,
+				3F1CD61A1B42E1E300AD1B65 /* StickerKeyboardModel.mm */,
+				3F1CD61B1B42E1E300AD1B65 /* StickerRecentTabCell.h */,
+				3F1CD61C1B42E1E300AD1B65 /* StickerRecentTabCell.m */,
+				3F1CD61D1B42E1E300AD1B65 /* StickerKeyboardModel.h */,
+				3F1CD6381B4434FA00AD1B65 /* StickerSwipeView.h */,
+				3F1CD6391B4434FA00AD1B65 /* StickerSwipeView.m */,
+			);
+			name = Stickers;
+			sourceTree = "<group>";
+		};
+		3F1CD6371B442D7900AD1B65 /*  SwipeView */ = {
+			isa = PBXGroup;
+			children = (
+				3F1CD6341B442D7400AD1B65 /* SwipeView.h */,
+				3F1CD6351B442D7400AD1B65 /* SwipeView.m */,
+			);
+			name = " SwipeView";
+			sourceTree = "<group>";
+		};
 		5063D6B21B3617F2005935D9 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +161,8 @@
 		5063D6BD1B3617F2005935D9 /* StickerKeyboardTest */ = {
 			isa = PBXGroup;
 			children = (
+				3F1CD6371B442D7900AD1B65 /*  SwipeView */,
+				3F1CD62B1B42E1FA00AD1B65 /* Stickers */,
 				5063D6C21B3617F2005935D9 /* AppDelegate.h */,
 				5063D6C31B3617F2005935D9 /* AppDelegate.m */,
 				5063D6C51B3617F2005935D9 /* ViewController.h */,
@@ -199,9 +281,16 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3F1CD6331B442C6800AD1B65 /* stickerImaegRegular.png in Resources */,
 				5063D6CA1B3617F2005935D9 /* Main.storyboard in Resources */,
+				3F1CD6251B42E1E300AD1B65 /* StickerKeyboardView.xib in Resources */,
+				3F1CD6311B442C6800AD1B65 /* packageImage.png in Resources */,
 				5063D6CF1B3617F2005935D9 /* LaunchScreen.xib in Resources */,
+				3F1CD6221B42E1E300AD1B65 /* StickerKeyboardCell.xib in Resources */,
 				5063D6CC1B3617F2005935D9 /* Images.xcassets in Resources */,
+				3F1CD62D1B440B2B00AD1B65 /* StickerRecentTabCell.xib in Resources */,
+				3F1CD6321B442C6800AD1B65 /* stickerImaegHalf.png in Resources */,
+				3F1CD6271B42E1E300AD1B65 /* StickerPackageKeyboardCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,8 +309,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				5063D6C71B3617F2005935D9 /* ViewController.m in Sources */,
+				3F1CD6361B442D7400AD1B65 /* SwipeView.m in Sources */,
+				3F1CD6261B42E1E300AD1B65 /* StickerPackageKeyboardCell.m in Sources */,
+				3F1CD62A1B42E1E300AD1B65 /* StickerRecentTabCell.m in Sources */,
+				3F1CD6281B42E1E300AD1B65 /* UIViewAdditions.mm in Sources */,
+				3F1CD63A1B4434FA00AD1B65 /* StickerSwipeView.m in Sources */,
+				3F1CD6241B42E1E300AD1B65 /* StickerKeyboardView.mm in Sources */,
 				5063D6C41B3617F2005935D9 /* AppDelegate.m in Sources */,
+				3F1CD6211B42E1E300AD1B65 /* StickerKeyboardCell.m in Sources */,
 				5063D6C11B3617F2005935D9 /* main.m in Sources */,
+				3F1CD6231B42E1E300AD1B65 /* StickerKeyboardDataSource.m in Sources */,
+				3F1CD6291B42E1E300AD1B65 /* StickerKeyboardModel.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -416,6 +514,7 @@
 				5063D6E01B3617F2005935D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5063D6E11B3617F2005935D9 /* Build configuration list for PBXNativeTarget "StickerKeyboardTestTests" */ = {
 			isa = XCConfigurationList;
@@ -424,6 +523,7 @@
 				5063D6E31B3617F2005935D9 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -7,8 +7,13 @@
 //
 
 #import "ViewController.h"
+#import "StickerKeyboardView.h"
+#import "StickerKeyboardModel.h"
 
 @interface ViewController ()
+
+@property (weak, nonatomic) IBOutlet StickerKeyboardView *keyboardView;
+@property (strong, nonatomic) StickerKeyboardModel *keyboardViewDataSource;
 
 @end
 
@@ -16,7 +21,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view, typically from a nib.
+    
+    self.keyboardViewDataSource = [[StickerKeyboardModel alloc] init];
+    self.keyboardView.dataSouce = self.keyboardViewDataSource;
 }
 
 - (void)didReceiveMemoryWarning {
