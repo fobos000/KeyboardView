@@ -19,13 +19,17 @@
 
 @protocol StickerSwipeViewDelegate <NSObject>
 
-
+- (void)swipeView:(StickerSwipeView *)swipeView didSwipeToItemAtIndex:(NSInteger)index;
 
 @end
 
 @interface StickerSwipeView : UIView
 
-@property (nonatomic, weak) id<StickerSwipeViewDataSource> dataSource;
-@property (nonatomic, weak) id<StickerSwipeViewDelegate> delegate;
+@property (nonatomic, weak) IBOutlet id<StickerSwipeViewDataSource> dataSource;
+@property (nonatomic, weak) IBOutlet id<StickerSwipeViewDelegate> delegate;
+
+- (void)reloadData;
+- (void)scrollToItemAtIndex:(NSUInteger)index;
+
 
 @end

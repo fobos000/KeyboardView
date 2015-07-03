@@ -11,26 +11,27 @@
 #import "StickerKeyboardCell.h"
 #import "StickerRecentTabCell.h"
 #import "UIViewAdditions.h"
+#import "StickerSwipeView.h"
 
 #define NUM_OF_PACKAGES_TO_SHOW_LARGE_MARKET_BUTTON 4
 #define MARKET_BUTTON_CORNER_RADIUS 5
 
-@interface StickerKeyboardView () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate>
+@interface StickerKeyboardView () <UICollectionViewDataSource, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, StickerSwipeViewDataSource, StickerSwipeViewDelegate>
 {
     StickerKeyboardCell *cellForSize;
 }
 
 @property (strong, nonatomic) IBOutlet UICollectionView *stickerPackageCollectionView;
-@property (strong, nonatomic) IBOutlet UICollectionView *stickerCollectionView;
+@property (strong, nonatomic) IBOutlet StickerSwipeView *stickerSwipeView;
 @property (strong, nonatomic) IBOutlet UIView *plusButton;
 @property (strong, nonatomic) IBOutlet UIView *goToMarketButton;
 @property (strong, nonatomic) IBOutlet UIView *packageCollectionViewContainer;
 @property (strong, nonatomic) NSMutableArray *array;
-@property (strong, nonatomic) StickerKeyboardCell *myCell;
 @property (strong, nonatomic) UIView *marketButton;
 @property (strong, nonatomic) StickerPackageKeyboardCell *recentCell;
 
 @property (assign, nonatomic) NSInteger selectedTabIndex;
+@property (assign, nonatomic) NSInteger requestedTabIndex;
 
 @end
 
@@ -64,14 +65,13 @@
     self.stickerPackageCollectionView.delegate = self;
     self.stickerPackageCollectionView.dataSource = self;
     
-    self.stickerCollectionView.delegate = self;
-    self.stickerCollectionView.dataSource = self;
+    self.stickerSwipeView.delegate = self;
+    self.stickerSwipeView.dataSource = self;
     
     [self.stickerPackageCollectionView registerNib:[UINib nibWithNibName:@"StickerPackageKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerPackageCell"];
     
     [self.stickerPackageCollectionView registerNib:[UINib nibWithNibName:@"StickerRecentTabCell" bundle:nil] forCellWithReuseIdentifier:@"recentCell"];
     
-    [self.stickerCollectionView registerNib:[UINib nibWithNibName:@"StickerKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerCell"];
     
     self.marketButton = self.goToMarketButton;
     [self configureMarketButtons];
@@ -123,7 +123,7 @@
 -(void) _refreshLayout
 {
     [_stickerPackageCollectionView reloadData];
-    [_stickerCollectionView reloadData];
+//    [_sti reloadData];
 }
 
 #pragma mark - UICollectionViewDataSource
@@ -134,25 +134,51 @@
             self.marketButton = self.plusButton;
         }
         return numberOfTabs;
-    } else if (collectionView == self.stickerCollectionView) {
-        if (_selectedTabIndex == 0) { // recent tab
+    } else {
+        if (self.requestedTabIndex == 0) { // recent tab
             return [self.dataSouce numberOfRecentStickersInStickerKeyboadView:self];
         } else {
-            return [self.dataSouce numberOfStickersInStickerKeyboadView:self forStickerPackageAtIndex:_selectedTabIndex - 1];
+            return [self.dataSouce numberOfStickersInStickerKeyboadView:self forStickerPackageAtIndex:self.requestedTabIndex - 1];
         }
         
     }
-    return 0;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     UICollectionViewCell *cell;
     if (collectionView == self.stickerPackageCollectionView) {
         cell = [self cellForTabCollectionViewAtIndexPath:indexPath];
-    } else if (collectionView == self.stickerCollectionView) {
-        cell = [self stickerCellForIndexPath:indexPath];
+    } else {
+        cell = [self stickerCellForIndexPath:indexPath forCollectionView:collectionView];
     }
     return cell;
+}
+
+#pragma mark - StickerSwipeViewDataSource
+
+- (NSInteger)numberOfItemsInSwipeView:(StickerSwipeView *)swipeView
+{
+    return [self.dataSouce numberOfStickerPackagesInStickerKeyboadView:self] + 1;
+}
+
+- (UIView *)swipeView:(StickerSwipeView *)swipeView viewForItemAtIndex:(NSInteger)index
+{
+    self.requestedTabIndex = index;
+    
+    UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+    UICollectionView *stickerCollectionView = [[UICollectionView alloc] initWithFrame:swipeView.bounds collectionViewLayout:layout];
+    stickerCollectionView.dataSource = self;
+    stickerCollectionView.delegate = self;
+    [stickerCollectionView registerNib:[UINib nibWithNibName:@"StickerKeyboardCell" bundle:nil] forCellWithReuseIdentifier:@"stickerCell"];
+    
+    return stickerCollectionView;
+}
+
+#pragma mark - StickerSwipeViewDelegate
+
+- (void)swipeView:(StickerSwipeView *)swipeView didSwipeToItemAtIndex:(NSInteger)index
+{
+    self.selectedTabIndex = index;
 }
 
 #pragma mark - Cell Configuration
@@ -198,9 +224,9 @@
 //    return packageCell;
 //}
 
-- (StickerKeyboardCell *)stickerCellForIndexPath:(NSIndexPath *)indexPath
+- (StickerKeyboardCell *)stickerCellForIndexPath:(NSIndexPath *)indexPath forCollectionView:(UICollectionView* )collectionView
 {
-    StickerKeyboardCell *cell = [self.stickerCollectionView dequeueReusableCellWithReuseIdentifier:@"stickerCell" forIndexPath:indexPath];
+    StickerKeyboardCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"stickerCell" forIndexPath:indexPath];
     
     __block UIImage *stickerImage = nil;
     
@@ -213,10 +239,10 @@
         });
     };
     
-    if (_selectedTabIndex == 0) { //recent tab
+    if (self.requestedTabIndex == 0) { //recent tab
         [self.dataSouce stickerKeyboardView:self imageForRecentStickerAtIndex:indexPath.item responseCallback:loadImageBloack];
     } else {
-        NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:_selectedTabIndex - 1];
+        NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:self.requestedTabIndex - 1];
         [self.dataSouce stickerKeyboardView:self imageForStickerAtIndexPath:stickerIndexPath responseCallback:loadImageBloack];
     }
     return cell;
@@ -225,16 +251,16 @@
 #pragma mark - UICollectionViewDelegateFlowLayout
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     
-    if (collectionView == self.stickerCollectionView) {
-        if (_selectedTabIndex == 0) {
-            return [self.dataSouce stickerKeyboardView:self sizeForRecentStickerImageAtIndex:indexPath.item];
-        } else {
-            NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:_selectedTabIndex - 1];
-            return [self.dataSouce stickerKeyboardView:self sizeForStickerImageAtIndexPath:stickerIndexPath];
-        }
-    } else {
+    if (collectionView == self.stickerPackageCollectionView) {
         CGFloat tabHeight = collectionView.bounds.size.height;
         return CGSizeMake(tabHeight, tabHeight);
+    } else {
+        if (self.requestedTabIndex == 0) {
+            return [self.dataSouce stickerKeyboardView:self sizeForRecentStickerImageAtIndex:indexPath.item];
+        } else {
+            NSIndexPath *stickerIndexPath = [NSIndexPath indexPathForItem:indexPath.item inSection:self.requestedTabIndex - 1];
+            return [self.dataSouce stickerKeyboardView:self sizeForStickerImageAtIndexPath:stickerIndexPath];
+        }
     }
 }
 
@@ -250,7 +276,7 @@
     
     _selectedTabIndex = selectedTabIndex;
     
-    [self.stickerCollectionView reloadData];
+//    [self.stickerSwipeView reloadData];
 }
 
 #pragma mark - UICollectionViewDelegate
