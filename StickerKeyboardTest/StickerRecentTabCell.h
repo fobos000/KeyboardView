@@ -10,4 +10,5 @@
 
 @interface StickerRecentTabCell : StickerPackageKeyboardCell
 
+
 @end
